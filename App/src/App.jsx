@@ -12,6 +12,7 @@ class App extends Component {
     }
 
     this._sendMsg = this._sendMsg.bind(this)
+    this._setUser = this._setUser.bind(this)
 
   }
 
@@ -39,23 +40,22 @@ class App extends Component {
         <a href="/" className="navbar-brand">Chatty</a>
       </nav>
       <MessageList messages={this.state.messages} />
-      <ChatBar currentUser={this.state.currentUser} sendMsg={this._sendMsg} />
+      <ChatBar currentUser={this.state.currentUser} sendMsg={this._sendMsg} setUser={this._setUser}/>
       </div>
     );
 
   }
 
   _sendMsg({username, content}) {
-    const currentUser = {name: username}
     const newMsg = {username, content}
-
-    this.setState({
-      currentUser,
-    });
-
     let socketMsg = {type: 'message', msg: newMsg}
     this.socket.send(JSON.stringify(socketMsg));
 
+  }
+
+  _setUser({username}) {
+    const currentUser = {name: username};
+    this.setState({currentUser})
   }
 
   _randomId() {

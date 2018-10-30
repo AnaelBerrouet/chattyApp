@@ -16,16 +16,17 @@ class ChatBar extends Component {
 
     this._onChangeUsername = this._onChangeUsername.bind(this)
     this._onChangeMsg = this._onChangeMsg.bind(this)
-    this._onKeyDown = this._onKeyDown.bind(this)
+    this._onKeyDownMsg = this._onKeyDownMsg.bind(this)
+    this._onKeyDownUsername = this._onKeyDownUsername.bind(this)
   }
 
   render() {
     return (
       <footer className="chatbar">
 
-        <input className="chatbar-username" placeholder="Your Name (Optional)" value={this.state.username} onChange={this._onChangeUsername}/>
+        <input className="chatbar-username" placeholder="Your Name (Optional)" value={this.state.username} onChange={this._onChangeUsername} onKeyDown={this._onKeyDownUsername}/>
 
-        <input className="chatbar-message" placeholder="Type a message and hit ENTER" value={this.state.content} onChange={this._onChangeMsg} onKeyDown={this._onKeyDown}/>
+        <input className="chatbar-message" placeholder="Type a message and hit ENTER" value={this.state.content} onChange={this._onChangeMsg} onKeyDown={this._onKeyDownMsg}/>
       </footer>
     );
   }
@@ -33,14 +34,16 @@ class ChatBar extends Component {
   _onChangeUsername(evt) {
     const username = evt.target.value;
     this.setState({username});
+
   }
 
   _onChangeMsg(evt) {
     const content = evt.target.value;
     this.setState({content});
+
   }
 
-  _onKeyDown(evt) {
+  _onKeyDownMsg(evt) {
     if(evt.keyCode == 13) {
 
       const username = this.state.username
@@ -50,6 +53,17 @@ class ChatBar extends Component {
       evt.target.value = ''
       this.setState({content: null})
     }
+
+  }
+
+  _onKeyDownUsername(evt) {
+    if(evt.keyCode == 13) {
+      const username = this.state.username
+
+      this.props.setUser({username})
+      this.setState({username: username})
+    }
+
   }
 
 }
