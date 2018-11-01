@@ -36,7 +36,7 @@ function genMsg(type, username, content) {
   }
 }
 
-// Broadcast to all.
+// Broadcast to all function.
 wss.broadcast = (data) => {
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
@@ -89,12 +89,10 @@ wss.on('connection', (ws) => {
 
     switch(msg.type) {
       case 'postMessage':
-        // console.log('postMessage')
         msg.type = 'incomingMessage'
         wss.broadcast(JSON.stringify(msg))
         break;
       case 'postNotification':
-        // console.log('postMessage')
         msg.type = 'incomingNotification'
         wss.broadcast(JSON.stringify(msg))
         break;
