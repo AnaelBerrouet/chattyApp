@@ -24,7 +24,15 @@ function getRandomInt(max) {
 }
 
 //Colors to be randomly assigned to users
-const colors = ['#ed5940', '#41e53b', '#4286f4', '#cc35dd'];
+const colorSchemes = [
+  ['#FFA3B1', '#B5E2FA', '#EDDEA4', '#F7A072'],
+  ['#2C514C', '#122932', '#95818D', '#E3C0D3'],
+  ['#1B065E', '#FF87AB', '#FCC8C2', '#F5ECCD'],
+  ['#B88E8D', '#34435E', '#60E1E0', '#6369D1'],
+  ['#0B5351', '#00A9A5', '#4E8098', '#90C2E7'],
+  ['#30C5FF', '#5C946E', '#80C2AF', '#A0DDE6']
+]
+const colors = colorSchemes[getRandomInt(colorSchemes.length)];
 
 //Create a message building function to ease the process of creating messages
 function genMsg(type, username, content) {
