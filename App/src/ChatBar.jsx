@@ -22,12 +22,6 @@ class ChatBar extends Component {
     );
   }
 
-  // _onChangeUsername(evt) {
-  //   const username = evt.target.value;
-  //   this.props.tx.setUser({username});
-
-  // }
-
   _onChangeMsg(evt) {
     const content = evt.target.value;
     this.props.tx.setChatbarContent({content});
@@ -53,17 +47,20 @@ class ChatBar extends Component {
   _onKeyDownUsername(evt) {
     if(evt.keyCode == 13) {
 
-      //modify component and app internal state for current user and username properties
+      if(this.props.username !== evt.target.value) {
 
-      this.props.tx.setUser({username: evt.target.value})
+        //modify component and app internal state for current user and username properties
 
-      //Set message package contents
-      const username = this.props.username
-      const content = `${this.props.username} has changed their name to ${evt.target.value}.`
-      const type = 'postNotification'
+        this.props.tx.setUser({username: evt.target.value})
 
-      //send notification to server to be broadcast to all clients
-      this.props.tx.sendMsg({type, username, content})
+        //Set message package contents
+        const username = this.props.username
+        const content = `${this.props.username} has changed their name to ${evt.target.value}.`
+        const type = 'postNotification'
+
+        //send notification to server to be broadcast to all clients
+        this.props.tx.sendMsg({type, username, content})
+      }
     }
 
   }

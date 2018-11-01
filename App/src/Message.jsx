@@ -2,13 +2,16 @@ import React from 'react';
 
 
 const imgStyle = {
-  maxHeight: '600px',
-  maxWidth: '60%',
   width: 'auto',
-  borderRadius: '10px'
+  borderRadius: '10px',
+  margin: 'auto',
+  boxSizing: 'border-box',
+  minWidth: '100%',
+  maxWidth: '100%'
 }
 
 function parseForImgs(content) {
+
   // //make sure content is string
   content = content.toString()
 
@@ -23,7 +26,8 @@ function parseForImgs(content) {
     return (<div>{content}</div>)
   }
 
-  let splitterRegex = new RegExp(imgSrc[0] + '(.+)')
+  //added regex allows for posting the same image multiple times
+  let splitterRegex = new RegExp(imgSrc[0] + '(.+)?')
   let msg = content.split(splitterRegex);
 
   let firstPiece = msg.shift()
@@ -39,14 +43,16 @@ function parseForImgs(content) {
 
 function Message({message}) {
 
-  const messageColor = { color: message.color }
-
+  const usernameColor = { color: message.color }
+  const msgColor = {
+    backgroundColor: message.color,
+  }
   const content = parseForImgs(message.content)
 
   return (
     <div className="message">
-      <span className="message-username" style={messageColor}>{message.username}</span>
-      <span className="message-content">{content}</span>
+      <span className="message-username" style={usernameColor}>{message.username}</span>
+      <div className="message-content" style={msgColor}>{content}</div>
     </div>
   );
 }

@@ -28,8 +28,12 @@ class App extends Component {
   }
 
   componentDidMount() {
+    //Scroll to bottom of screen
+    this._scrollToBottom();
+
     //create websocket connected to socket server
     this.socket = new WebSocket('ws://localhost:3001');
+    // this.socket = new WebSoket('ws://172.46.0.100:3001');
 
     //handle complete connection
     this.socket.onopen = () => {
@@ -71,11 +75,17 @@ class App extends Component {
 
   }
 
+  componentDidUpdate() {
+    //Scroll to bottom of screen
+    this._scrollToBottom();
+  }
+
   render() {
     return (
       <div>
       <Navbar numUsers={this.state.users}/>
       <MessageList className='message-list' messages={this.state.messages} tx={this.tx} />
+      <div ref={(bottomAnchor) => { this.messagesEnd = bottomAnchor; }}></div>
       <ChatBar username={this.state.currentUser.name} content={this.state.chatbarContent} tx={this.tx}/>
       </div>
     );
@@ -95,6 +105,10 @@ class App extends Component {
 
   _setChatbarContent({chatbarContent}) {
     this.setState({chatbarContent})
+  }
+
+  _scrollToBottom() {
+    this.messagesEnd.scrollIntoView({ behavior: 'smooth' });
   }
 
 }
