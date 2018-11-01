@@ -1,7 +1,7 @@
 // server.js
 
 const express = require('express');
-const SocketServer = require('ws').Server;
+const WebSocket = require('ws');
 
 const uuidv4 = require('uuid/v4');
 
@@ -16,7 +16,7 @@ const server = express()
 
 
 // Create the WebSockets server
-const wss = new SocketServer({ server });
+const wss = new WebSocket.Server({ server});
 
 //Utility function for assinging colors to users
 function getRandomInt(max) {
@@ -24,7 +24,26 @@ function getRandomInt(max) {
 }
 
 //Colors to be randomly assigned to users
-const colors = ['#ed5940', '#41e53b', '#4286f4', '#cc35dd']
+const colors = ['#ed5940', '#41e53b', '#4286f4', '#cc35dd'];
+
+//Create a message building function to ease the process of creating messages
+function genMsg(type, username, content) {
+  return {
+    type: type,
+    username: username,
+    content: content,
+    id: uuidv4()
+  }
+}
+
+// Broadcast to all.
+wss.broadcast = (data) => {
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(data);
+    }
+  });
+};
 
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
@@ -32,47 +51,35 @@ const colors = ['#ed5940', '#41e53b', '#4286f4', '#cc35dd']
 wss.on('connection', (ws) => {
   console.log('Client connected');
 
+  //Update count of connected users for all clients
+  let content = {users: wss.clients.size}
+  let data = genMsg('serverNotification-userCount','server', content)
+  wss.broadcast(JSON.stringify(data))
 
-  //build client count message to list users
-  const msgNewUser = {
-    type: 'serverNotification-userCount',
-    username: 'server',
-    content: {
-      users: wss.clients.size,
-    },
-    id: uuidv4()
-  };
+  //Send 'New User' Notification to all clients (except for new user)
+  content = 'New anonymous user has joined the chat!'
+  data = genMsg('incomingNotification','server', content)
   wss.clients.forEach((client) => {
-    client.send(JSON.stringify(msgNewUser))
+    if (client !== ws && client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(data));
+    }
   });
 
-  //build client count message to list users
-  const msgAssignColor = {
-    type: 'serverNotification-assignColor',
-    username: 'server',
-    content: {
-      color: colors[getRandomInt(4)]
-    },
-    id: uuidv4()
-  };
-  ws.send(JSON.stringify(msgAssignColor));
+  //Assign color to single user that logged on
+  content = {color: colors[getRandomInt(4)]};
+  data = genMsg('serverNotification-assignColor', 'server', content)
+  ws.send(JSON.stringify(data));
 
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   ws.on('close', () => {
     console.log('Client disconnected')
+
     //build client count message to list users
-    const msgLostUser = {
-      type: 'serverNotification-userCount',
-      username: 'server',
-      content: {
-        users: wss.clients.size,
-      },
-      id: uuidv4()
-    };
-    wss.clients.forEach((client) => {
-      client.send(JSON.stringify(msgLostUser))
-    });
+    let content = {users: wss.clients.size}
+    let data = genMsg('serverNotification-userCount', 'server', content)
+    wss.broadcast(JSON.stringify(data))
+
   });
 
   ws.on('message', (data) => {
@@ -84,16 +91,12 @@ wss.on('connection', (ws) => {
       case 'postMessage':
         // console.log('postMessage')
         msg.type = 'incomingMessage'
-        wss.clients.forEach((client) => {
-          client.send(JSON.stringify(msg))
-        });
+        wss.broadcast(JSON.stringify(msg))
         break;
       case 'postNotification':
         // console.log('postMessage')
         msg.type = 'incomingNotification'
-        wss.clients.forEach((client) => {
-          client.send(JSON.stringify(msg))
-        });
+        wss.broadcast(JSON.stringify(msg))
         break;
       default:
         // show an error in the console if the message type is unknown

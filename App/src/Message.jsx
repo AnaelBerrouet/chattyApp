@@ -4,7 +4,8 @@ import React from 'react';
 const imgStyle = {
   maxHeight: '600px',
   maxWidth: '60%',
-  width: 'auto'
+  width: 'auto',
+  borderRadius: '10px'
 }
 
 function parseForImgs(content) {

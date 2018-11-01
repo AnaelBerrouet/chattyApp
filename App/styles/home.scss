@@ -12,7 +12,7 @@ body {
 
 .chatbar {
   background: tomato;
-  border-top: 1px solid black;
+  /*border-top: 1px solid black;*/
   bottom: 0;
   display: flex;
   left: 0;
@@ -23,7 +23,11 @@ body {
 
 .chatbar-message,
 .chatbar-username {
-  border: 1px solid black;
+  /*border: 1px solid black;*/
+  /*added new*/
+  border: none;
+  border-radius: 5px;
+  /**/
   display: block;
   height: 40px;
   line-height: 40px;
@@ -52,12 +56,14 @@ body {
 .message-content,
 .message-username {
   overflow: hidden;
+  word-break: break-all;
   margin: 5px;
   padding: 0 10px;
 }
 
 .message-content {
   flex: 8;
+
 }
 
 .message-username {
@@ -65,9 +71,23 @@ body {
   font-weight: 700;
 }
 
+.notification {
+  color: grey;
+  font-style: italic;
+  display: flex;
+  padding: 5px;
+}
+
+.notification-content {
+  overflow: hidden;
+  word-break: break-all;
+  margin: 5px;
+  padding: 0 10px;
+}
+
 .navbar {
   background: tomato;
-  border-bottom: 1px solid black;
+  /*border-bottom: 1px solid black;*/
   height: 60px;
   left: 0;
   padding: 0 10px;
@@ -80,6 +100,7 @@ body {
   color: inherit;
   display: block;
   float: left;
+  font-family: 'Lobster', cursive;
   font-weight: 700;
   font-size: 28px;
   height: 60px;

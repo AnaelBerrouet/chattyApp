@@ -38,22 +38,36 @@ class App extends Component {
 
     //handle messages from the server (messages or notifications)
     this.socket.onmessage = (evt) => {
+
+      //Ever message gets saved to the chat history (including server notification messages)
       console.log('Incoming Message...',evt.data)
       const newMsg = JSON.parse(evt.data)
       const messages = [...this.state.messages, newMsg]
       this.setState({messages});
 
-      if(newMsg.type === 'serverNotification-userCount') {
-        const {users} = newMsg.content
-        this.setState({users})
+      //Manage client app based on server notifications
+      switch(newMsg.type) {
+        case 'serverNotification-userCount':
+          const {users} = newMsg.content
+          this.setState({users})
+          break;
+        case 'serverNotification-assignColor':
+          const {color} = newMsg.content
+          this.setState({color})
+          break;
+        default:
+          break;
       }
 
-      if(newMsg.type === 'serverNotification-assignColor') {
-        const {color} = newMsg.content
-        this.setState({color})
-
-      }
     }
+
+    window.addEventListener('beforeunload', () => {
+      this._sendMsg({
+        type: 'postNotification',
+        username: this.state.currentUser.name,
+        content: this.state.currentUser.name + ' has disconnected.'
+      })
+    });
 
   }
 
@@ -61,7 +75,7 @@ class App extends Component {
     return (
       <div>
       <Navbar numUsers={this.state.users}/>
-      <MessageList messages={this.state.messages} tx={this.tx} />
+      <MessageList className='message-list' messages={this.state.messages} tx={this.tx} />
       <ChatBar username={this.state.currentUser.name} content={this.state.chatbarContent} tx={this.tx}/>
       </div>
     );
