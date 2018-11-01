@@ -5,9 +5,9 @@ A minimal and light weight single room chat server built with ReactJS. Features 
 Built from the Lighthouse Labs [react boiler plate](github.com/lighthouse-labs/react-simple-boilerplate.git)
 
 ### Screenshots
-![chat Screen](https://github.com/AnaelBerrouet/chattyApp/blob/master/App/build/Screen%20Shot%202018-11-01%20at%203.09.29%20PM.png)
+![chat Screen](https://github.com/AnaelBerrouet/chattyApp/blob/master/App/build/Screen%20Shot%202018-11-01%20at%207.43.23%20PM.png)
 
-![chat Screen with gif](https://github.com/AnaelBerrouet/chattyApp/blob/master/App/build/Screen%20Shot%202018-11-01%20at%203.14.32%20PM.png)
+![chat Screen with gif](https://github.com/AnaelBerrouet/chattyApp/blob/master/App/build/Screen%20Shot%202018-11-01%20at%207.49.57%20PM.png)
 
 ### Usage
 
