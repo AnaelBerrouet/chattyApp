@@ -20,8 +20,8 @@ Install the dependencies for the server-side app and start the server.
 cd chattyApp/Websocket-Server
 npm install
 npm start
-open http://localhost:3000
 ```
+Websocket server will be running on http://localhost:3001
 
 Install the dependencies for the client-side app and start the server.
 ```
